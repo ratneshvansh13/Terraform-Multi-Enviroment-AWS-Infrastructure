@@ -1,18 +1,20 @@
-name: Hello World
-on: workflow_dispatch
+name: Deploy HTML to S3
+on: push
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Build Step
-        run: echo "A demo build"
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Test phase
-        run: echo "Running test cases"
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - name: deploy the app
-        run: echo "Hello, ${{ secrets.DOCKER_PASSWORD }}
+ deploy:
+   runs-on: ubuntu-latest
+   steps:
+     - name: Checkout code from repo
+       uses: actions/checkout@v4
+     - name: Configure AWS Credentials
+       uses: aws-actions/configure-aws-credentials@v4
+       with:
+         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+         aws-secret-access-key: $ {{ secrets.AWS_SECRET_ACCESS_KEY }}
+         aws-region: us-east-1
+     - name: Code Static code to S3
+        run: | 
+          aws s3 sync ./ s3://gha-bkt/ \
+          --exclude "*" \
+          --include "index.html"
+        
