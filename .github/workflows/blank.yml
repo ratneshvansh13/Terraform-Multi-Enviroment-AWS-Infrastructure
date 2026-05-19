@@ -15,4 +15,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: deploy the app
-        run: echo " Deploying the app"
+        run: echo "Hello, ${{ secrets.DOCKER_PASSWORD }}
